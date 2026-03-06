@@ -33,11 +33,14 @@ body{
     font-size: 1.4em;
     border: 4px solid rgb(88, 88, 88);
     border-radius: 10px;
-    margin-left: 50px
+    margin-left: 50px;
+    transition: all 0.3s ease;
 }
 
 .inputSection input:focus {
     outline: none;
+    background-color:rgb(220, 220, 220);
+
 }
 .inputSection input:hover{
     background-color:rgb(181, 181, 181);
@@ -57,12 +60,14 @@ body{
     font-size: 2em;
     border: 4px solid rgb(88, 88, 88);
     border-radius: 10px;
+    transition: all 0.3s ease;
     
 }
 
 .inputSection button:hover{
     background-color:rgb(181, 181, 181);
     cursor:pointer;
+    transform:scale(1.05);
 }
 .todoSection{
     margin-top:30px;
@@ -82,6 +87,17 @@ body{
 
 .todo input{
     transform: scale(1.5); 
+    transition: all 0.3s ease;
+    accent-color:rgb(88, 88, 88);;
+}
+
+.todo input:hover{
+    cursor:pointer;
+    transform: scale(1.60); 
+}
+
+.todo input[type="checkbox"]:checked + .label {
+  text-decoration: line-through;
 }
 
 .todo span{
@@ -101,5 +117,12 @@ body{
     height: 20px;
     object-fit: contain; 
     cursor: pointer;
+    transition: all 0.3s ease;
 
 }
+
+.arrowup:hover, .arrowdown:hover {
+    transform: scale(1.15);
+
+}
+
