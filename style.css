@@ -1,0 +1,105 @@
+body{
+    margin:0;
+    background-color: rgb(172, 172, 172);
+}
+
+
+.titleSection{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height:20vh;
+    background-color: rgb(95, 95, 95);
+    color:white;
+}
+
+.titleSection h1{
+    font-size: 3.4em;
+}
+
+
+.inputSection{
+    margin-top:30px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap:20px;
+}
+
+.inputSection input{
+    width:35vw;
+    height:30px;
+    padding:10px;
+    font-size: 1.4em;
+    border: 4px solid rgb(88, 88, 88);
+    border-radius: 10px;
+    margin-left: 50px
+}
+
+.inputSection input:focus {
+    outline: none;
+}
+.inputSection input:hover{
+    background-color:rgb(181, 181, 181);
+    cursor:pointer;
+}
+
+.inputSection input::placeholder {
+  text-align: center;
+}
+
+.inputSection button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:50px;
+    height:50px;
+    font-size: 2em;
+    border: 4px solid rgb(88, 88, 88);
+    border-radius: 10px;
+    
+}
+
+.inputSection button:hover{
+    background-color:rgb(181, 181, 181);
+    cursor:pointer;
+}
+.todoSection{
+    margin-top:30px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+     gap:30px;
+}
+.todo{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap:10px;
+
+}
+
+.todo input{
+    transform: scale(1.5); 
+}
+
+.todo span{
+    font-size: 1.5em;
+}
+
+.todo .arrows{
+    display:flex;
+    flex-direction: column;
+    margin:0;
+    padding:0;
+    gap:3px;
+}
+
+.arrowup, .arrowdown {
+    width: 20px; 
+    height: 20px;
+    object-fit: contain; 
+    cursor: pointer;
+
+}
