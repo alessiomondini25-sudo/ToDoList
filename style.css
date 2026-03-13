@@ -128,10 +128,11 @@ body{
 .todo span{
     font-size: 1.5em;
 }
-.todo .arrows{
+.arrows{
     display:flex;
     flex-direction: column;
     margin:0;
+    margin-left:auto;
     padding:0;
     gap:3px;
 }

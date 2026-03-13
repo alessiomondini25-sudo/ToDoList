@@ -2,33 +2,35 @@ var addBtn = document.getElementById("addBtn"); //BOTTONE DI AGGIUNTA DODO
 var todoSection = document.querySelector(".todoSection"); //DIV CHE CONTIENE I TODO
 var inputText = document.getElementById("inputText"); //ELEMENTO DI INPUT TEXT
 
+
+
 const templatenewTodo = {
-            label: "",
-            status: false,
-            order: 1,
-            priorita: 2,
-        }
+    label: "",
+    status: false,
+    order: 1,
+    priorita: 1,
+}
 //creare un array di oggetti che rappresentano le todo
 const todoList = [
     {
         label: "cose da fare 1",
         status: true,
         priorita: 1,
-        order: 100,
+        order: 1,
     },
     {
         label: "cose da fare 2",
         status: false,
-        priorita: 2,
-        order: 1,
+        priorita: 100,
+        order: 2,
     },
     {
         label: "cose da fare 3",
         status: true,
-        priorita: 3,
-        order: 100,
+        priorita: 100,
+        order: 3,
     }
-    ]
+]
 
 
 // }
@@ -44,9 +46,9 @@ const todoList = [
 disegnaElenco();
 
 //CREA LE TODO IN BASE AL JSON
-function disegnaElenco(){
+function disegnaElenco() {
     todoSection.innerText = ''; //svuotare la lista prima di ridisegnarla
-    
+
 
     //METODO NON TROPPO EFFICIENTE
     // todoList.sort(function(a,b){
@@ -56,24 +58,24 @@ function disegnaElenco(){
     //         return ordinamentoPriorita;
     //     }
     //     return ordinamentoOrder;
-        
+
     // });
 
     //METODO EFFICIENTE E SCALABILE
-    todoList.sort(function(a,b){
-        return (a.priorita + a.order * 100) - (b.priorita + b.order * 100);
+    todoList.sort(function (a, b) {
+        //return (a.priorita*100 + a.order ) - (b.priorita*100 + b.order );
+        return (a.order ) - (b.order );
     });
 
 
 
-    todoList.forEach(function(item)
-    {
-    var testoInput= item.label;
-    const isChecked = item.status ? "checked" : "";
-    const classeExtra = item.status ? "todochecked" : "";
-    
-    const nuovoTodoHTML = `
-        <div class="todo ${classeExtra}">
+    todoList.forEach(function (item,index) {
+        var testoInput = item.label;
+        const isChecked = item.status ? "checked" : "";
+        const classeExtra = item.status ? "todochecked" : "";
+
+        const nuovoTodoHTML = `
+        <div class="todo ${classeExtra}" data-todoorder="${item.order}" data-todoid="${index}">
             <input class="checkbox" type="checkbox" ${isChecked}>
             <span class="label ">${testoInput}</span>
             <div class="arrows">
@@ -82,62 +84,163 @@ function disegnaElenco(){
             </div>
         </div>
     `;
+        
 
-    
-    todoSection.insertAdjacentHTML('beforeend', nuovoTodoHTML);
+        todoSection.insertAdjacentHTML('beforeend', nuovoTodoHTML);
+
+        
+
+         
+
     }
     );
+
+        //FUNZIONE SPOSTAMENTO
+
+        var arrowdown = document.querySelectorAll(".arrowdown");
+        var arrowup = document.querySelectorAll(".arrowup");
+
+        //MOVE UP
+        arrowup.forEach(function (item, index) {
+        item.addEventListener("click", moveTodoUp);
+        }
+        );
+
+        //MOVE DOWN
+        arrowdown.forEach(function (item, index) {
+        item.addEventListener("click", moveTodoDown);
+        }
+        );
+
+
 
     //CONTROLLA PER OGNI TODO LO STATO DELLA CHECKBOX PER VERIFICARE EVENTUALI CAMBIAMENTI
     const inputCheckBox = document.querySelectorAll(".checkbox");
-    inputCheckBox.forEach(function(item, index)
-    {
-        item.addEventListener("change", function() {
+    inputCheckBox.forEach(function (item, index) {
+        item.addEventListener("change", function () {
             // AGGIORNIAMO IL DATO: cambiamo lo status nell'array originale
             todoList[index].status = item.checked;
-            if(todoList[index].status==true){
-                todoList[index].order = 100;
+            if (todoList[index].status == true) {
+                todoList[index].priorita = 100;
             }
-            else{
-                todoList[index].order = 1;
-            } 
-            
+            else {
+                todoList[index].priorita = 1;
+            }
+
             // RIDISEGNIAMO: la funzione ricrea la lista leggendo il nuovo status
             disegnaElenco();
         });
+
     }
     );
 
+   
 
+}
+
+function moveTodoUp(event) {
+    const todoElement = event.target.closest('.todo');
+    const prevTodoElement = todoElement.previousElementSibling;
+
+    const currentOrderValue = parseInt(todoElement.dataset.todoorder);
+
+    if(!prevTodoElement){
+        return;
     }
 
-    //***************APPUNTI DELLA LEZIONE************
+    const prevOrderValue = parseInt(prevTodoElement.dataset.todoorder);
 
-    //CODICE DEL PROF SEMPLICE SINGOLO ELEMENTO
-    //const elementoDiv = document.createElement("div");
-    //elementoDiv.innerText = item.label;
-    //elementoDiv.classList.add("todo")
-    //todoSection.append(elementoDiv);
+    const TodoItem = todoList.find(
+        function(el)
+        {
+            return el.order === currentOrderValue;
+        });
 
-    //CONFIGURAZIONE DEL BOTTONE
-    addBtn.addEventListener("click",addItem);
-    function addItem(){
 
-        var testoInput = inputText.value; //PRENDE IL VALORE DELL AREA DI TESTO
+    const prevTodoItem = todoList.find(
+        function(el)
+        {
+            return el.order === prevOrderValue;
+        });
 
-        if(testoInput===""){  //CONTROLLA CHE IL CAMPO NON SIA VUOTO
+    //console.log("ATTUALE ",{currentOrderValue});
+    //console.log("VECCHIO ",{prevOrderValue});
+    const oldTodoItemOrder = TodoItem.order;
+    //console.log("oldTodoItemOrder  ",{oldTodoItemOrder});
+    TodoItem.order = prevTodoItem.order;
+    //console.log("NUOVO ORDER  ",{prevOrderValue});
+    prevTodoItem.order = oldTodoItemOrder;
+    //console.log("NUOVO ORDER PREV ",{oldTodoItemOrder});
+    disegnaElenco();
+
+}
+
+
+function moveTodoDown(event) {
+
+    const todoElement = event.target.closest('.todo');
+    const nextTodoElement = todoElement.nextElementSibling;
+
+    const currentOrderValue = parseInt(todoElement.dataset.todoorder);
+
+    if(!nextTodoElement){
+        return;
+    }
+
+    const nextOrderValue = parseInt(nextTodoElement.dataset.todoorder);
+
+
+    const TodoItem = todoList.find(
+        function(el)
+        {
+            return el.order === currentOrderValue;
+        });
+
+
+    const nextTodoItem = todoList.find(
+        function(el)
+        {
+            return el.order === nextOrderValue;
+        });
+
+    const oldTodoItemOrder = TodoItem.order;
+
+    TodoItem.order = nextTodoItem.order;
+
+    nextTodoItem.order = oldTodoItemOrder;
+
+    disegnaElenco();
+
+
+}
+
+//***************APPUNTI DELLA LEZIONE************
+
+//CODICE DEL PROF SEMPLICE SINGOLO ELEMENTO
+//const elementoDiv = document.createElement("div");
+//elementoDiv.innerText = item.label;
+//elementoDiv.classList.add("todo")
+//todoSection.append(elementoDiv);
+
+//CONFIGURAZIONE DEL BOTTONE
+addBtn.addEventListener("click", addItem);
+function addItem() {
+
+    var testoInput = inputText.value; //PRENDE IL VALORE DELL AREA DI TESTO
+
+    if (testoInput === "") {  //CONTROLLA CHE IL CAMPO NON SIA VUOTO
         alert("Impossibile inserire una To Do vuota!");
         return;
-        }
-
-        const newTodo = {...templatenewTodo,label: testoInput}
-    
-        
-        todoList.push(newTodo);
-        disegnaElenco();
-
-        inputText.value = "";  //svuota la casella di testo
-        inputText.focus();  //riporta il focus direttamente sulla casella
-        console.log(todoList)
-  
     }
+
+    const newTodo = { ...templatenewTodo, label: testoInput }
+
+
+    todoList.push(newTodo);
+    disegnaElenco();
+
+    inputText.value = "";  //svuota la casella di testo
+    inputText.focus();  //riporta il focus direttamente sulla casella
+    console.log(todoList)
+
+}
