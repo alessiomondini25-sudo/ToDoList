@@ -2,7 +2,7 @@ var addBtn = document.getElementById("addBtn"); //BOTTONE DI AGGIUNTA DODO
 var todoSection = document.querySelector(".todoSection"); //DIV CHE CONTIENE I TODO
 var inputText = document.getElementById("inputText"); //ELEMENTO DI INPUT TEXT
 
-
+const LS_TODOLIST_KEY = "todolist";
 
 const templatenewTodo = {
     label: "",
@@ -11,26 +11,8 @@ const templatenewTodo = {
     priorita: 1,
 }
 //creare un array di oggetti che rappresentano le todo
-const todoList = [
-    {
-        label: "cose da fare 1",
-        status: true,
-        priorita: 1,
-        order: 1,
-    },
-    {
-        label: "cose da fare 2",
-        status: false,
-        priorita: 100,
-        order: 2,
-    },
-    {
-        label: "cose da fare 3",
-        status: true,
-        priorita: 100,
-        order: 3,
-    }
-]
+const savedTodoList = localStorage.getItem(LS_TODOLIST_KEY);
+const todoList = savedTodoList ? JSON.parse(savedTodoList) : [];
 
 
 // }
@@ -64,15 +46,18 @@ function disegnaElenco() {
     //METODO EFFICIENTE E SCALABILE
     todoList.sort(function (a, b) {
         //return (a.priorita*100 + a.order ) - (b.priorita*100 + b.order );
-        return (a.order ) - (b.order );
+        return (b.order ) - (a.order );
     });
 
 
+    localStorage.setItem(LS_TODOLIST_KEY,JSON.stringify(todoList));
 
     todoList.forEach(function (item,index) {
         var testoInput = item.label;
         const isChecked = item.status ? "checked" : "";
         const classeExtra = item.status ? "todochecked" : "";
+        
+        //<div class="todo ${classeExtra}" data-todoorder="${item.order}" data-todoid="${index}">
 
         const nuovoTodoHTML = `
         <div class="todo ${classeExtra}" data-todoorder="${item.order}" data-todoid="${index}">
@@ -87,11 +72,6 @@ function disegnaElenco() {
         
 
         todoSection.insertAdjacentHTML('beforeend', nuovoTodoHTML);
-
-        
-
-         
-
     }
     );
 
@@ -233,7 +213,9 @@ function addItem() {
         return;
     }
 
-    const newTodo = { ...templatenewTodo, label: testoInput }
+    
+    const order = todoList.length;
+    const newTodo = { ...templatenewTodo, label: testoInput, order: order }
 
 
     todoList.push(newTodo);
